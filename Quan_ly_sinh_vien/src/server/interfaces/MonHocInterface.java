@@ -15,11 +15,11 @@ import java.util.List;
 import models.MonHoc;
 
 public interface MonHocInterface extends Remote {
-    void addMonHoc(MonHoc monHoc) throws RemoteException;
-    void updateMonHoc(MonHoc monHoc) throws RemoteException;
+    MonHoc addMonHoc(MonHoc monHoc) throws RemoteException;
+    MonHoc updateMonHoc(MonHoc monHoc) throws RemoteException;
     void deleteMonHoc(int id) throws RemoteException;
     List<MonHoc> getAllMonHoc() throws RemoteException;
 
-    public MonHoc getById(int id) throws RemoteException;
+    MonHoc getById(int id) throws RemoteException;
 }
 

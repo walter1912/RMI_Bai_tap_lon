@@ -30,7 +30,7 @@ public class DiemService extends UnicastRemoteObject implements DiemInterface {
     }
 
     @Override
-    public void addDiem(Diem diem) throws RemoteException {
+    public Diem addDiem(Diem diem) throws RemoteException {
         Connection connection = connectDb.getConnection();
         try {
             String query = "INSERT INTO Diem (sinhVienHocId, cc, btl, thi) VALUES (?, ?, ?, ?)";
@@ -44,10 +44,11 @@ public class DiemService extends UnicastRemoteObject implements DiemInterface {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return diem;
     }
 
     @Override
-    public void updateDiem(Diem diem) throws RemoteException {
+    public Diem updateDiem(Diem diem) throws RemoteException {
         Connection connection = connectDb.getConnection();
         try {
             String query = "UPDATE Diem SET cc=?, btl=?, thi=? WHERE id=?";
@@ -61,6 +62,7 @@ public class DiemService extends UnicastRemoteObject implements DiemInterface {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+         return diem;
     }
 
     @Override

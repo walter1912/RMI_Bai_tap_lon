@@ -32,7 +32,7 @@ public class SinhVienService extends UnicastRemoteObject implements SinhVienInte
     }
 
     @Override
-    public void addSinhVien(SinhVien sinhVien) throws RemoteException {
+    public SinhVien addSinhVien(SinhVien sinhVien) throws RemoteException {
         Connection connection = connectDb.getConnection();
         try {
             String query = "INSERT INTO SinhVien (ma, ten, address, birthday) VALUES (?, ?, ?, ?)";
@@ -46,10 +46,11 @@ public class SinhVienService extends UnicastRemoteObject implements SinhVienInte
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return sinhVien;
     }
 
     @Override
-    public void updateSinhVien(SinhVien sinhVien) throws RemoteException {
+    public SinhVien updateSinhVien(SinhVien sinhVien) throws RemoteException {
         Connection connection = connectDb.getConnection();
         try {
             String query = "UPDATE SinhVien SET ma=?, ten=?, address=?, birthday=? WHERE id=?";
@@ -64,6 +65,7 @@ public class SinhVienService extends UnicastRemoteObject implements SinhVienInte
         } catch (SQLException e) {
             e.printStackTrace();
         }
+         return sinhVien;
     }
 
     @Override

@@ -53,10 +53,16 @@ public class ClientConsole {
                 System.out.println("Chọn chức năng:");
                 System.out.println("1. Thêm sinh viên");
                 System.out.println("2. Tìm kiếm sinh viên");
-                System.out.println("3. Cập nhật sinh viên");
-                System.out.println("4. Thêm môn học");
-                System.out.println("5. Cập nhật môn học");
-                System.out.println("6. Thêm điểm của sinh viên");
+                System.out.println("3. Tìm sinh viên theo id");
+                System.out.println("4. cập nhật sinh viên");
+                System.out.println("5. Xóa sinh viên");
+
+                System.out.println("6. Thêm môn học");
+                System.out.println("7. Cập nhật môn học");
+                System.out.println("8. Thêm điểm của sinh viên");
+                System.out.println("9. Lấy danh sách điểm của môn học");
+                System.out.println("10. lấy danh sách môn học");
+                System.out.println("11. lấy danh sách sinh viên");
 
                 System.out.println("0. Thoát");
 
@@ -65,22 +71,38 @@ public class ClientConsole {
                 switch (choice) {
                     case 1:
                         addSinhVien();
-
                         break;
                     case 2:
                         searchSinhVien();
                         break;
                     case 3:
-                        updateSinhVien();
+                        getSinhVienById();
                         break;
                     case 4:
-                        addMonHoc();
+                        updateSinhVien();
                         break;
                     case 5:
-                        updateMonHoc();
+                        deleteSinhVien();
                         break;
                     case 6:
+                        addMonHoc();
+                        break;
+                    case 7:
+                        updateMonHoc();
+                        break;
+                    case 8:
                         addDiemsinhVien();
+                        break;
+                    case 9:
+                        getDiemMonHoc();
+                        break;
+                    case 10:
+                        List<MonHoc> listmh = monHocService.getAllMonHoc();
+                        printListMonHoc(listmh);
+                        break;
+                    case 11:
+                        List<SinhVien> listsv = sinhVienService.getAllSinhVien();
+                        printListSV(listsv);
                         break;
                     case 0:
                         System.out.println("Bạn đã thoát khỏi chương trình.");
@@ -130,7 +152,8 @@ public class ClientConsole {
 
             // Gọi phương thức từ xa để thêm sinh viên
             SinhVien newSinhVien = new SinhVien(0, ma, ten, address, birthday);
-            sinhVienService.addSinhVien(newSinhVien);
+            SinhVien added = sinhVienService.addSinhVien(newSinhVien);
+            System.out.println(added);
             System.out.println("Sinh viên đã được thêm thành công!");
         } catch (RemoteException ex) {
             System.out.println("Thêm sinh viên thất bại!");
@@ -172,11 +195,37 @@ public class ClientConsole {
             if (!birthday.startsWith("0")) {
                 svExisted.setBirthday(birthday);
             }
-            sinhVienService.updateSinhVien(svExisted);
+            SinhVien updated = sinhVienService.updateSinhVien(svExisted);
+
             System.out.println("Sinh viên đã được cập nhật thành công!");
+            System.out.println(updated);
         } catch (RemoteException ex) {
             System.out.println("Cập nhật sinh viên thất bại!");
             ex.printStackTrace();
+        }
+    }
+
+    public static void deleteSinhVien() {
+        try {
+            System.out.println("Nhập id của sinh viên cần xóa: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            sinhVienService.deleteSinhVien(id);
+            System.out.println("Xóa sinh viên có id = " + id + " thành công");
+        } catch (Exception ex) {
+            System.out.println("Nhập id sinh viên bị sai");
+        }
+    }
+
+    public static void getSinhVienById() {
+        try {
+            System.out.println("Nhập id của sinh viên: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            SinhVien sv = sinhVienService.getById(id);
+            System.out.println(sv);
+        } catch (Exception ex) {
+            System.out.println("Nhập id sinh viên bị sai");
         }
     }
 
@@ -336,6 +385,27 @@ public class ClientConsole {
         }
     }
 
+    public static void getDiemMonHoc() {
+        try {
+            List<Diem> allDiem = diemService.getAllDiem();
+            System.out.println("Nhập id môn học cần lấy điểm");
+            int idMonHoc = scanner.nextInt();
+            scanner.nextLine();
+            MonHoc monHoc = null;
+            try {
+                monHoc = monHocService.getById(idMonHoc);
+                System.out.println(monHoc);
+            } catch (Exception ex) {
+                System.out.println("Lỗi khi lấy môn học");
+            }
+            printDiemMonHoc(idMonHoc, allDiem);
+        } catch (Exception ex) {
+            System.out.println("Lỗi khi lấy danh sách điểm");
+            return;
+        }
+
+    }
+
     // các thao tác in ra màn hình danh sách 
     public static void printListSV(List<SinhVien> list) {
         System.out.println("Danh sách kết quả sinh viên:");
@@ -360,6 +430,27 @@ public class ClientConsole {
                 System.out.println("Không tìm thấy sinh viên");
             }
             System.out.println(diem);
+        }
+    }
+
+    public static void printDiemMonHoc(int idMonHoc, List<Diem> allDiem) {
+        System.out.println("Danh sách  kết quả điểm:");
+        for (Diem diem : allDiem) {
+            SinhVienHoc svh = new SinhVienHoc();
+            try {
+                svh = sinhVienHocService.getById(diem.getSinhVienHocId());
+            } catch (RemoteException ex) {
+                System.out.println("Không tìm thấy sinh viên");
+            }
+            if (svh.getMonHocId() == idMonHoc) {
+                try {
+                    SinhVien sv = sinhVienService.getById(svh.getSinhVienId());
+                    System.out.println(sv);
+                    System.out.println(diem);
+                } catch (Exception ex) {
+                    System.out.println("Lỗi khi lấy thông tin sinh viên");
+                }
+            }
         }
     }
 }

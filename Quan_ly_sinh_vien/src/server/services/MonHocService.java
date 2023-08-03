@@ -31,7 +31,7 @@ public class MonHocService extends UnicastRemoteObject implements MonHocInterfac
     }
 
     @Override
-    public void addMonHoc(MonHoc monHoc) throws RemoteException {
+    public MonHoc addMonHoc(MonHoc monHoc) throws RemoteException {
         Connection connection = connectDb.getConnection();
         try {
             String query = "INSERT INTO MonHoc (ma, ten, tinchi) VALUES (?, ?, ?)";
@@ -44,10 +44,11 @@ public class MonHocService extends UnicastRemoteObject implements MonHocInterfac
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return monHoc;
     }
 
     @Override
-    public void updateMonHoc(MonHoc monHoc) throws RemoteException {
+    public MonHoc updateMonHoc(MonHoc monHoc) throws RemoteException {
         Connection connection = connectDb.getConnection();
         try {
             String query = "UPDATE MonHoc SET ma=?, ten=?, tinchi=? WHERE id=?";
@@ -61,6 +62,7 @@ public class MonHocService extends UnicastRemoteObject implements MonHocInterfac
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return monHoc;
     }
 
     @Override

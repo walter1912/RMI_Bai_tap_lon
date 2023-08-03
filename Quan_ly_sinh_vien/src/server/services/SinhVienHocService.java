@@ -87,4 +87,31 @@ public class SinhVienHocService extends UnicastRemoteObject implements SinhVienH
         return sinhVienHocList;
     }
 
+    @Override
+    public SinhVienHoc getById(int id) throws RemoteException {
+        Connection connection = connectDb.getConnection();
+        SinhVienHoc sinhVienHoc = null;
+        try {
+            String query = "SELECT sinhVienId, monHocId FROM SinhVienHoc WHERE id=?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int sinhVienId = resultSet.getInt("sinhVienId");
+
+                int monHocId = resultSet.getInt("monHocId");
+
+                sinhVienHoc = new SinhVienHoc(id, sinhVienId, monHocId);
+            }
+
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sinhVienHoc;
+    }
+
+
 }

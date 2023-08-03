@@ -15,8 +15,8 @@ import java.util.List;
 import models.Diem;
 
 public interface DiemInterface extends Remote {
-    void addDiem(Diem diem) throws RemoteException;
-    void updateDiem(Diem diem) throws RemoteException;
+    Diem addDiem(Diem diem) throws RemoteException;
+    Diem updateDiem(Diem diem) throws RemoteException;
     void deleteDiem(int id) throws RemoteException;
     List<Diem> getAllDiem() throws RemoteException;
 }

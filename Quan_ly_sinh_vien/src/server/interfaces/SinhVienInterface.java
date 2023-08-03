@@ -15,8 +15,8 @@ import java.util.List;
 import models.SinhVien;
 
 public interface SinhVienInterface extends Remote {
-    void addSinhVien(SinhVien sinhVien) throws RemoteException;
-    void updateSinhVien(SinhVien sinhVien) throws RemoteException;
+    SinhVien addSinhVien(SinhVien sinhVien) throws RemoteException;
+    SinhVien updateSinhVien(SinhVien sinhVien) throws RemoteException;
     void deleteSinhVien(int id) throws RemoteException;
     SinhVien getById(int id) throws RemoteException;
     List<SinhVien> getAllSinhVien() throws RemoteException;
